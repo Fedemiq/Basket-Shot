@@ -108,15 +108,13 @@
                 left: 10px;
                 right: auto;
                 padding: 25px;
-                font-size: 30px; 
-            }
-            
-            #instructions h1 {
-                font-size: 40px;
+                font-size: 60px; 
+                min-width: 550px !important;
+                min-height: 450px !important;
             }
 
             .lil-gui {
-                --font-size: 30px; 
+                --font-size: 50px; 
                 --input-font-size: 30px;
                 --name-width: 55%;
                 --slider-input-min-width: 70px;
@@ -125,26 +123,39 @@
                 right: 10px !important;
                 left: auto !important;
                 bottom: auto !important;
-                width: 450px !important;
+                min-width: 550px !important;
+                min-height: 450px !important;
             }
 
             .lil-gui .title {
-                font-size: 30px;
+                font-size: 50px;
                 padding: 20px;
             }
 
-            #reset-btn {
-                bottom: 20px;
+            #result {
+                position: absolute;
+                top: 20px;
                 left: 50%;
-                right: auto;
                 transform: translateX(-50%);
-                width: 90%;
-                padding: 20px; 
+                font-size: 70px; 
+                text-align: center;
+                width: auto;
+            }
+
+            #reset-btn {
+                bottom: 50px;
+                right: 50px;
+                left: auto;
+                transform: none;
+                width: auto;
+                min-width: 350px;
+                padding: 25px 40px; 
                 font-size: 40px; 
                 text-align: center;
             }
+            
             #reset-btn:active {
-                transform: translateX(-50%) scale(0.95);
+                transform: scale(0.95);
             }
         }
     </style>
