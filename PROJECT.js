@@ -10,7 +10,7 @@ const clock = new THREE.Clock();
 /* ----- Variabili Globali e Stato ----- */
 let scene, camera, renderer, controls; 
 let playerMixer, playerAction; 
-let ballMesh, playerMesh, courtMesh, billboardMesh; 
+let ballMesh, playerMesh, courtMesh, billboardMesh, billboardMesh2; 
 
 // Variabili per l'illuminazione dinamica
 let sunLight, hemiLight;
@@ -172,12 +172,21 @@ function loadAssets() {
         } 
     }); 
 
-    const photoTexture = textureLoader.load('./assets/mia_foto.jpg'); 
+   // Poster n. 1
+    const photoTexture = textureLoader.load('./assets/jordan.jpeg'); 
     const boardGeo = new THREE.PlaneGeometry(1, 1); 
     const boardMat = new THREE.MeshBasicMaterial({ map: photoTexture, side: THREE.DoubleSide }); 
     billboardMesh = new THREE.Mesh(boardGeo, boardMat); 
     billboardMesh.position.set(2.5, 1.5, -10.4); 
     scene.add(billboardMesh); 
+
+    // Poster n. 2
+    const photoTexture2 = textureLoader.load('./assets/koby.jpeg'); 
+    const boardGeo2 = new THREE.PlaneGeometry(1, 1); 
+    const boardMat2 = new THREE.MeshBasicMaterial({ map: photoTexture2, side: THREE.DoubleSide }); 
+    billboardMesh2 = new THREE.Mesh(boardGeo2, boardMat2); 
+    billboardMesh2.position.set(-2.5, 1.5, -10.4); 
+    scene.add(billboardMesh2); 
 
     gltfLoader.load('./assets/models/campo.gltf', (gltf) => { 
         courtMesh = gltf.scene; 
