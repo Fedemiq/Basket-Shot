@@ -147,12 +147,12 @@ function loadAssets() {
     const objLoader = new OBJLoader(); 
     const mtlLoader = new MTLLoader(); 
 
-    mtlLoader.setPath('/assets/models/'); 
+    mtlLoader.setPath('/assets/'); 
     mtlLoader.load('palla.mtl', (materials) => { 
         materials.preload(); 
         
         objLoader.setMaterials(materials); 
-        objLoader.setPath('/assets/models/'); 
+        objLoader.setPath('/assets/'); 
         objLoader.load('palla.obj', (obj) => { 
             ballMesh = obj.children[0]; 
             ballMesh.visible = false; 
@@ -160,7 +160,7 @@ function loadAssets() {
         });
     }); 
 
-    gltfLoader.load('/assets/models/giocatore.gltf', (gltf) => { 
+    gltfLoader.load('/assets/giocatore.gltf', (gltf) => { 
         playerMesh = gltf.scene; 
         scene.add(playerMesh); 
 
@@ -188,7 +188,7 @@ function loadAssets() {
     billboardMesh2.position.set(-2.5, 1.5, -10.4); 
     scene.add(billboardMesh2); 
 
-    gltfLoader.load('/assets/models/campo.gltf', (gltf) => { 
+    gltfLoader.load('/assets/campo.gltf', (gltf) => { 
         courtMesh = gltf.scene; 
         scene.add(courtMesh); 
     }); 
