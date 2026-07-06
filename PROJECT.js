@@ -83,9 +83,9 @@ function init() {
 
     const audioListener = new THREE.AudioListener(); 
     camera.add(audioListener); 
-    loadAudio(audioListener, 'score', './assets/audio/suono1.mp3'); 
-    loadAudio(audioListener, 'rim', './assets/audio/suono2.mp3'); 
-    loadAudio(audioListener, 'miss', './assets/audio/suono3.mp3'); 
+    loadAudio(audioListener, 'score', '/assets/audio/suono1.mp3'); 
+    loadAudio(audioListener, 'rim', '/assets/audio/suono2.mp3'); 
+    loadAudio(audioListener, 'miss', '/assets/audio/suono3.mp3'); 
 
     // Luce emisferica per riflettere il cielo sul terreno
     hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6);
@@ -147,12 +147,12 @@ function loadAssets() {
     const objLoader = new OBJLoader(); 
     const mtlLoader = new MTLLoader(); 
 
-    mtlLoader.setPath('./assets/models/'); 
+    mtlLoader.setPath('/assets/models/'); 
     mtlLoader.load('palla.mtl', (materials) => { 
         materials.preload(); 
         
         objLoader.setMaterials(materials); 
-        objLoader.setPath('./assets/models/'); 
+        objLoader.setPath('/assets/models/'); 
         objLoader.load('palla.obj', (obj) => { 
             ballMesh = obj.children[0]; 
             ballMesh.visible = false; 
@@ -160,7 +160,7 @@ function loadAssets() {
         });
     }); 
 
-    gltfLoader.load('./assets/models/giocatore.gltf', (gltf) => { 
+    gltfLoader.load('/assets/models/giocatore.gltf', (gltf) => { 
         playerMesh = gltf.scene; 
         scene.add(playerMesh); 
 
@@ -173,7 +173,7 @@ function loadAssets() {
     }); 
 
    // Poster n. 1
-    const photoTexture = textureLoader.load('./assets/jordan.jpeg'); 
+    const photoTexture = textureLoader.load('/assets/jordan.jpeg'); 
     const boardGeo = new THREE.PlaneGeometry(1, 1); 
     const boardMat = new THREE.MeshBasicMaterial({ map: photoTexture, side: THREE.DoubleSide }); 
     billboardMesh = new THREE.Mesh(boardGeo, boardMat); 
@@ -181,14 +181,14 @@ function loadAssets() {
     scene.add(billboardMesh); 
 
     // Poster n. 2
-    const photoTexture2 = textureLoader.load('./assets/koby.jpeg'); 
+    const photoTexture2 = textureLoader.load('/assets/koby.jpeg'); 
     const boardGeo2 = new THREE.PlaneGeometry(1, 1); 
     const boardMat2 = new THREE.MeshBasicMaterial({ map: photoTexture2, side: THREE.DoubleSide }); 
     billboardMesh2 = new THREE.Mesh(boardGeo2, boardMat2); 
     billboardMesh2.position.set(-2.5, 1.5, -10.4); 
     scene.add(billboardMesh2); 
 
-    gltfLoader.load('./assets/models/campo.gltf', (gltf) => { 
+    gltfLoader.load('/assets/models/campo.gltf', (gltf) => { 
         courtMesh = gltf.scene; 
         scene.add(courtMesh); 
     }); 
