@@ -56,14 +56,12 @@
         }
         h3 {
             font-size: 12pt;
-            font-style: italic;
             margin: 1.75rem 0 0.5rem;
             font-weight: bold;
         }
 
         p { 
             margin: 0 0 0.85rem; 
-            text-align: justify;
         }
         p:last-child { margin-bottom: 0; }
 
@@ -104,9 +102,9 @@
         <ol>
             <li><a href="#introduzione">Introduzione</a></li>
             <li><a href="#asset">Caricamento Modelli e Asset</a></li>
-            <li><a href="#logica">Logica di Gioco e Traiettorie</a></li>
-            <li><a href="#interazione">Interazione Utente e Controlli</a></li>
-            <li><a href="#illuminazione">Illuminazione Dinamica e Ciclo Giorno/Notte</a></li>
+            <li><a href="#logica">Logica di gioco</a></li>
+            <li><a href="#interazione">Interazione utente</a></li>
+            <li><a href="#illuminazione">Illuminazione e Ciclo giorno/notte</a></li>
             <li><a href="#riferimenti">Riferimenti</a></li>
         </ol>
     </nav>
@@ -115,45 +113,48 @@
         <h2>1. Introduzione</h2>
 
         <p>
-            L'applicazione interattiva "Basket Shot", sviluppata in WebGL tramite la libreria Three.js, consiste in una simulazione tridimensionale di un tiro a canestro in un campetto urbano.
+            L'applicazione interattiva "Basket Shot", sviluppata tramite la libreria Three.js, consiste in una simulazione tridimensionale di un tiro a canestro in un campetto urbano. 
+            
             
             <img src="images/campo-generale.png" alt="Screenshot generale della scena" style="max-width: 100%; margin-top: 0.5rem;" />
         </p>
 
         <p>
-            L'utente è immerso in un ambiente statico con però la simulazione dello scorrere del tempo tramite ciclo giorno-notte, che si completa nell'arco di pochi minuti reali. 
-            La scena è arricchita da feedback audio contestuali per i diversi scenari di tiro, animazione scheletrica per il personaggio principale e un calcolo matematico della traiettoria parabolica della palla. 
-            È possibile modificare la velocità di animazione del tiro tramite un'apposita interfaccia utente (GUI) e controllare la posizione della telecamera sia da desktop che da dispositivi mobile.
+            Per conferire dinamismo all'ambiente virtuale, sono state implementate diverse tecniche visive e interattive. 
+            Lo scorrere del tempo è rappresentato da un ciclo giorno-notte compresso in pochi minuti reali, gestito fondendo i colori del cielo tramite interpolazione e attivando 
+            l'illuminazione urbana nelle fasce notturne. L'interazione principale si avvale dell'animazione scheletrica del giocatore e della simulazione matematica del tiro a canestro, 
+            accompagnati da effetti sonori reattivi. Tramite la GUI è possibile regolare la velocità della palla, mentre i controlli della telecamera garantiscono la piena navigabilità 
+            multipiattaforma.
         </p>
     </section>
 
     <section id="asset">
         <h2>2. Caricamento Modelli e Asset</h2>
         <p>
-            La scena si compone di vari asset 3D caricati in modo asincrono sfruttando diversi <em>Loader</em> offerti da Three.js:
+            La scena si compone di vari asset 3D caricati in modo asincrono sfruttando diversi Loader offerti da Three.js (integrato nel progetto importando direttamente i moduli nativi):
         </p>
             <ul>
-                <li><strong>Giocatore e Campo:</strong> Caricati tramite <code>GLTFLoader</code>. Il giocatore include un'animazione scheletrica del tiro gestita tramite <code>AnimationMixer</code>.</li>
-                <li><strong>Palla da Basket:</strong> Caricata combinando <code>OBJLoader</code> e <code>MTLLoader</code> per leggere correttamente i materiali e le texture mappate.</li>
-                <li><strong>Foto autore:</strong> Generata istanziando una <code>PlaneGeometry</code> a cui viene applicata una texture fotografica 2D caricata tramite <code>TextureLoader</code></li>
-                <li><strong>Effetti Sonori:</strong> File <code>.mp3</code> caricati tramite <code>AudioLoader</code> e collegati a un <code>AudioListener</code> posizionato sulla telecamera, 
+                <li><strong>Giocatore e Campo:</strong> caricati tramite <code>GLTFLoader</code>. Il giocatore include un'animazione scheletrica del tiro gestita tramite <code>AnimationMixer</code>.</li>
+                <li><strong>Palla da basket:</strong> caricata combinando <code>OBJLoader</code> e <code>MTLLoader</code> per leggere correttamente i materiali e le texture mappate.</li>
+                <li><strong>Poster:</strong> creati istanziando una <code>PlaneGeometry</code> a cui viene applicata una texture fotografica 2D caricata tramite <code>TextureLoader</code></li>
+                <li><strong>Effetti sonori:</strong> file <code>.mp3</code> caricati tramite <code>AudioLoader</code> e collegati a un <code>AudioListener</code> posizionato sulla telecamera, 
                     garantendo un feedback uditivo differente in base all'esito del tiro (canestro, ferro o fuori). I file audio sono stati pensati per aggiungere un tocco di ilarità al progetto.</li>
             </ul>
     </section>
 
     <section id="logica">
-        <h2>3. Logica di Gioco e Traiettorie</h2>
+        <h2>3. Logica di gioco</h2>
         
         <h3>Macchina a Stati</h3>
         <p>
-            L'intero flusso logico dell'applicazione è controllato da una macchina a stati finiti (<code>STATE_IDLE</code>, <code>STATE_ANIMATING</code>, <code>STATE_FLYING</code>, <code>STATE_BOUNCING</code>, <code>STATE_FINISHED</code>). 
+            L'intero flusso logico dell'applicazione è controllato da una macchina a stati finiti (<code>STATE_IDLE, STATE_ANIMATING, STATE_FLYING, STATE_BOUNCING, STATE_FINISHED</code>). 
             Questa architettura garantisce che il volo della palla inizi esattamente in sincrono con l'animazione da parte del modello 3D, gestita tramite <code>setTimeout</code>.
         </p>
 
         <h3>Calcolo della Parabola</h3>
         <p>
-            Il movimento della palla nello spazio non utilizza un motore fisico reale, ma sfrutta l'interpolazione vettoriale unita a funzioni trigonometriche per simulare in modo economico ed efficace una traiettoria parabolica. 
-            La palla trasla dal punto di partenza (posizione della mano del giocatore al lancio) al punto di destinazione, che varia tra 
+            Il movimento della palla nello spazio non utilizza un motore fisico reale, ma sfrutta l'interpolazione vettoriale unita a funzioni trigonometriche per simulare in modo 
+            economico ed efficace una traiettoria parabolica. La palla trasla dal punto di partenza (posizione della mano del giocatore al lancio) al punto di destinazione, che varia tra 
             posizione del canestro in caso di tiro positivo, 
             posizione del canestro con rimbalzo successivo in caso di tiro neutro 
             e 3 possibili punti della scena in caso di fallimento.
@@ -185,7 +186,7 @@ ballMesh.rotation.z += 5 * delta;
     </section>
 
     <section id="interazione">
-        <h2>4. Interazione Utente e Controlli</h2>
+        <h2>4. Interazione utente</h2>
 
         <p>
             Il progetto è completamente ottimizzato e responsivo, supportando molteplici schemi di interazione:
@@ -194,7 +195,8 @@ ballMesh.rotation.z += 5 * delta;
             <li><strong>Tiro:</strong> Attivabile cliccando il modello del giocatore tramite l'utilizzo di un <code>Raycaster</code>, che converte le coordinate 2D del mouse/touch nella scena in vettori 3D,
                  oppure premendo la barra spaziatrice.</li>
             <li><strong>Reset:</strong> Per ripetere il tiro, l'utente può premere il tasto "R" o utilizzare un pulsante UI in overlay, progettato con touch-target per l'utilizzo da smartphone.</li>
-            <li><strong>GUI (lil-gui):</strong> Permette di variare dinamicamente la velocità globale della palla, modificando il delta di avanzamento di <code>flightProgress</code></li>
+            <li><strong>GUI (lil-gui):</strong> Permette di variare dinamicamente la velocità globale della palla, modificando il delta di avanzamento di <code>flightProgress</code>.
+            Inoltre vi è la possibilità di attivare lo sfarfallio di uno dei lampioni del campetto.</li>
         </ul>
 
         <p>
@@ -204,7 +206,7 @@ ballMesh.rotation.z += 5 * delta;
     </section>
 
     <section id="illuminazione">
-        <h2>5. Illuminazione Dinamica e Ciclo Giorno/Notte</h2>
+        <h2>5. Illuminazione e Ciclo giorno/notte</h2>
 
         <p>
             Uno degli elementi tecnicamente più complessi del progetto è la transizione fluida e continua dell'illuminazione per simulare il passaggio del tempo. Lo scorrere di un intero giorno viene simulato in 120 secondi reali.
@@ -212,8 +214,8 @@ ballMesh.rotation.z += 5 * delta;
 
         <p>La scena è illuminata da:</p>
         <ol>
-            <li><strong>Luce Direzionale (Sole/Luna):</strong> <code>DirectionalLight</code> che ruota lungo un'orbita calcolata trigonometricamente sopra il campo.</li>
-            <li><strong>Luce Emisferica:</strong> <code>HemisphereLight</code> che simula la rifrazione del colore del cielo sugli oggetti, ammorbidendo le ombre.</li>
+            <li><strong>Luce direzionale (sole/luna):</strong> <code>DirectionalLight</code> che ruota lungo un'orbita calcolata trigonometricamente sopra il campo.</li>
+            <li><strong>Luce emisferica:</strong> <code>HemisphereLight</code> che simula la rifrazione del colore del cielo sugli oggetti, ammorbidendo le ombre.</li>
             <li><strong>Lampioni (PointLights):</strong> 4 luci posizionate proceduralmente agli angoli del campo, per simulare l'accensione dei lampioni di notte.
             Tramite pannello di controllo vi è anche la possibilità di abilitare lo sfarfallio di uno dei 4 lampioni presenti, in modo da aggiungere realismo alla scena.</li>
         </ol>   
@@ -236,7 +238,8 @@ if (time >= 5 && time < 8) { // Alba (5 - 8)
 </pre>
 
         <p>
-            L'intensità delle <code>PointLight</code> associate ai lampioni è governata da una curva lineare che accende le luci gradualmente a partire dal crepuscolo e le spegne dolcemente al sorgere del sole, per movimentare una scena che altrimenti sarebbe molto statica, specialmente per un gioco "sportivo".
+            Al fine di ravvivare una scena che rischierebbe di risultare troppo statica per un gioco sportivo, l'intensità delle <code>PointLight</code> dei lampioni segue un'interpolazione 
+            lineare. Ciò permette all'illuminazione di accendersi gradualmente durante il crepuscolo e un spegnersi dolcemente alle prime luci dell'alba.
         </p>
     </section>
 
